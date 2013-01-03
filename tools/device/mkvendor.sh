@@ -118,7 +118,7 @@ echo Creating initial git repository.
 pushd $DEVICE_DIR
 git init
 git add .
-git commit -a -m "mkvendor.sh: Initial commit of $DEVICE"
+git commit -a -m "$DEVICE: Initial commit"
 popd
 
 echo Done!
