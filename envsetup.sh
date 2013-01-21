@@ -1176,12 +1176,12 @@ function cmremote()
           return 0
         fi
     fi
-    CMUSER=`git config --get review.review.pecancm.insomnia247.nl.username`
+    CMUSER=`git config --get review.review.cyanogenmod.com.username`
     if [ -z "$CMUSER" ]
     then
-        git remote add cmremote ssh://review.pecancm.insomnia247.nl:6117/$GERRIT_REMOTE
+        git remote add cmremote ssh://review.cyanogenmod.com:29418/$GERRIT_REMOTE
     else
-        git remote add cmremote ssh://$CMUSER@review.pecancm.insomnia247.nl:6117/$GERRIT_REMOTE
+        git remote add cmremote ssh://$CMUSER@review.cyanogenmod.com:29418/$GERRIT_REMOTE
     fi
     echo You can now push to "cmremote".
 }
@@ -1221,7 +1221,7 @@ function cmgerrit() {
         $FUNCNAME help
         return 1
     fi
-    local user=`git config --get review.review.pecancm.insomnia247.n.username`
+    local user=`git config --get review.review.cyanogenmod.com.username`
     local review=`git config --get remote.github.review`
     local project=`git config --get remote.github.projectname`
     local command=$1
@@ -1278,7 +1278,7 @@ EOF
 usage: $FUNCNAME push [OPTIONS] [LOCAL_BRANCH:]REMOTE_BRANCH
 
 works as:
-    git push OPTIONS ssh://USER@DOMAIN:6117/PROJECT \\
+    git push OPTIONS ssh://USER@DOMAIN:29418/PROJECT \\
       {LOCAL_BRANCH|HEAD}:refs/for/REMOTE_BRANCH
 
 Example:
@@ -1346,7 +1346,7 @@ EOF
                     ;;
             esac
             shift
-            git push $@ ssh://$user@$review:6117/$project \
+            git push $@ ssh://$user@$review:29418/$project \
                 $local_branch:refs/for/$remote_branch || return 1
             ;;
         changes|for)
@@ -1478,7 +1478,7 @@ function cmrebase() {
     echo "Bringing it up to date..."
     repo sync .
     echo "Fetching change..."
-    git fetch "http://review.pecancm.insomnia247.nl/p/$repo" "refs/changes/$refs" && git cherry-pick FETCH_HEAD
+    git fetch "http://review.cyanogenmod.com/p/$repo" "refs/changes/$refs" && git cherry-pick FETCH_HEAD
     if [ "$?" != "0" ]; then
         echo "Error cherry-picking. Not uploading!"
         return
