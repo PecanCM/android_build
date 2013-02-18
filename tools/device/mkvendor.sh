@@ -85,8 +85,8 @@ fi
 
 for file in $(find $TEMPLATE_DIR -name '*.template')
 do
-    OUTPUT_FILE=$DEVICE_DIR/$(basename $(echo $file | sed s/\\.template//g))
-    cat $file | sed s/__DEVICE__/$DEVICE/g | sed s/__MANUFACTURER__/$MANUFACTURER/g | sed -f $TMPDIR/sedcommand | sed s/__BASE__/$BASE/g | sed s/__PAGE_SIZE__/$PAGESIZE/g > $OUTPUT_FILE
+    OUTPUT_FILE=$DEVICE_DIR/$(basename $(echo $file | gsed s/\\.template//g))
+    cat $file | gsed s/__DEVICE__/$DEVICE/g | gsed s/__MANUFACTURER__/$MANUFACTURER/g | gsed -f $TMPDIR/sedcommand | gsed s/__BASE__/$BASE/g | gsed s/__PAGE_SIZE__/$PAGESIZE/g > $OUTPUT_FILE
 done
 
 if [ ! -z "$TMPDIR" ]

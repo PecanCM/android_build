@@ -8,7 +8,7 @@ else
     fi
     while [ -L "$JAVAC" ] ; do
         LSLINE=$(ls -l "$JAVAC")
-        JAVAC=$(echo -n "$LSLINE" | sed -e "s/.* -> //")
+        JAVAC=$(echo -n "$LSLINE" | gsed -e "s/.* -> //")
     done
-    echo $JAVAC | sed -e "s:\(.*\)/bin/javac.*:\\1/lib/tools.jar:"
+    echo $JAVAC | gsed -e "s:\(.*\)/bin/javac.*:\\1/lib/tools.jar:"
 fi
