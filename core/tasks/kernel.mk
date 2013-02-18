@@ -14,7 +14,7 @@
 
 # Android makefile to build kernel as a part of Android Build
 
-TARGET_AUTO_KDIR := $(shell echo $(TARGET_DEVICE_DIR) | sed -e 's/^device/kernel/g')
+TARGET_AUTO_KDIR := $(shell echo $(TARGET_DEVICE_DIR) | gsed -e 's/^device/kernel/g')
 
 ## Externally influenced variables
 # kernel location - optional, defaults to kernel/<vendor>/<device>

@@ -748,7 +748,7 @@ endef
 define transform-variables
 @mkdir -p $(dir $@)
 @echo "Sed: $(if $(PRIVATE_MODULE),$(PRIVATE_MODULE),$@) <= $<"
-$(hide) sed $(foreach var,$(REPLACE_VARS),-e "s/{{$(var)}}/$(subst /,\/,$(PWD)/$($(var)))/g") $< >$@
+$(hide) gsed $(foreach var,$(REPLACE_VARS),-e "s/{{$(var)}}/$(subst /,\/,$(PWD)/$($(var)))/g") $< >$@
 $(hide) if [ "$(suffix $@)" = ".sh" ]; then chmod a+rx $@; fi
 endef
 
@@ -759,7 +759,7 @@ endef
 
 define transform-d-to-p
 $(hide) cp $(@:%.o=%.d) $(@:%.o=%.P); \
-	sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
+	gsed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(@:%.o=%.d) >> $(@:%.o=%.P); \
 	rm -f $(@:%.o=%.d)
 endef
@@ -1677,7 +1677,7 @@ define obfuscate-jar
 @mkdir -p $(dir $@)
 @rm -f $@
 @mkdir -p $(PRIVATE_INTERMEDIATES_DIR)
-$(hide) sed -e 's/^/-keep class /' < $(PRIVATE_KEEP_FILE) > \
+$(hide) gsed -e 's/^/-keep class /' < $(PRIVATE_KEEP_FILE) > \
 		$(PRIVATE_INTERMEDIATES_DIR)/keep.pro
 $(hide) java -Xmx512M -jar $(HOST_OUT_JAVA_LIBRARIES)/proguard-4.0.1.jar \
 		-injars $< \
@@ -1759,7 +1759,7 @@ endef
 # comments (for config files and such).
 define copy-file-to-target-strip-comments
 @mkdir -p $(dir $@)
-$(hide) sed -e 's/#.*$$//' -e 's/[ \t]*$$//' -e '/^$$/d' < $< > $@
+$(hide) gsed -e 's/#.*$$//' -e 's/[ \t]*$$//' -e '/^$$/d' < $< > $@
 endef
 
 # The same as copy-file-to-target, but don't preserve
