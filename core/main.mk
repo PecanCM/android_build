@@ -40,8 +40,8 @@ endif
 # Check for broken versions of make.
 # (Allow any version under Cygwin since we don't actually build the platform there.)
 ifeq (,$(findstring CYGWIN,$(shell uname -sm)))
-ifeq (0,$(shell expr $$(echo $(MAKE_VERSION) | gsed "s/[^0-9\.].*//") = 3.81))
-ifeq (0,$(shell expr $$(echo $(MAKE_VERSION) | gsed "s/[^0-9\.].*//") = 3.82))
+ifeq (0,$(shell expr $$(echo $(MAKE_VERSION) | sed "s/[^0-9\.].*//") = 3.81))
+ifeq (0,$(shell expr $$(echo $(MAKE_VERSION) | sed "s/[^0-9\.].*//") = 3.82))
 $(warning ********************************************************************************)
 $(warning *  You are using version $(MAKE_VERSION) of make.)
 $(warning *  Android is tested to build with versions 3.81 and 3.82.)

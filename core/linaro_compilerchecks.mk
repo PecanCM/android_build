@@ -35,7 +35,7 @@ try-run = $(shell set -e; \
 	fi)
 
 cc-version = $(shell echo '__GNUC__ __GNUC_MINOR__' \
-	|$(LINARO_COMPILERCHECK_CC) -E -xc - |tail -n1 |gsed -e 's, ,,g')
+	|$(LINARO_COMPILERCHECK_CC) -E -xc - |tail -n1 |sed -e 's, ,,g')
 
 cc-ifversion = $(shell [ $(call cc-version) $(1) $(2) ] && echo $(3))
 

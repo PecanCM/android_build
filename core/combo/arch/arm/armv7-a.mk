@@ -19,7 +19,7 @@ ARCH_ARM_HAVE_VFP_D32           := true
 ARCH_ARM_HAVE_NEON              := true
 endif
 
-mcpu-arg = $(shell gsed 's/^-mcpu=//' <<< "$(call cc-option,-mcpu=$(1),-mcpu=$(2))")
+mcpu-arg = $(shell sed 's/^-mcpu=//' <<< "$(call cc-option,-mcpu=$(1),-mcpu=$(2))")
 
 ifeq ($(TARGET_ARCH_VARIANT_CPU), cortex-a15)
 TARGET_ARCH_VARIANT_CPU := $(call mcpu-arg,cortex-a15,cortex-a9)
