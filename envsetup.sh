@@ -1,3 +1,16 @@
+# this must come first as even this file uses the sed command
+if [ `uname -s` =~ Darwin ]; then 
+export SYSTEM_USE_OSX=y
+fi
+
+# add full compatibility for OSX, as BSD sed (sed) can cause issues
+# so GNU sed (gsed) must be used instead
+if [ ! -z $SYSTEM_USE_OSX ]; then
+export SED=gsed
+else
+export SED=sed
+fi
+
 function help() {
 cat <<EOF
 Invoke ". build/envsetup.sh" from your shell to add the following functions to your environment:
@@ -20,7 +33,7 @@ EOF
     T=$(gettop)
     local A
     A=""
-    for i in `cat $T/build/envsetup.sh | sed -n "/^function /s/function \([a-z_]*\).*/\1/p" | sort`; do
+    for i in `cat $T/build/envsetup.sh | $SED -n "/^function /s/function \([a-z_]*\).*/\1/p" | sort`; do
       A="$A $i"
     done
     echo $A
@@ -60,8 +73,8 @@ function check_product()
     fi
 
     if (echo -n $1 | grep -q -e "^cm_") ; then
-       CM_BUILD=$(echo -n $1 | sed -e 's/^cm_//g')
-       NAM_VARIANT=$(echo -n $1 | sed -e 's/^cm_//g')
+       CM_BUILD=$(echo -n $1 | $SED -e 's/^cm_//g')
+       NAM_VARIANT=$(echo -n $1 | $SED -e 's/^cm_//g')
     elif (echo -n $1 | grep -q -e "htc_") ; then
        CM_BUILD=
        NAM_VARIANT=$(echo -n $1)
@@ -522,7 +535,7 @@ function lunch()
 
     export TARGET_BUILD_APPS=
 
-    local product=$(echo -n $selection | sed -e "s/-.*$//")
+    local product=$(echo -n $selection | $SED -e "s/-.*$//")
     check_product $product
     if [ $? -ne 0 ]
     then
@@ -543,7 +556,7 @@ function lunch()
         product=
     fi
 
-    local variant=$(echo -n $selection | sed -e "s/^[^\-]*-//")
+    local variant=$(echo -n $selection | $SED -e "s/^[^\-]*-//")
     check_variant $variant
     if [ $? -ne 0 ]
     then
@@ -612,7 +625,7 @@ function tapas()
 function eat()
 {
     if [ "$OUT" ] ; then
-        MODVERSION=`sed -n -e'/ro\.cm\.version/s/.*=//p' $OUT/system/build.prop`
+        MODVERSION=`$SED -n -e'/ro\.cm\.version/s/.*=//p' $OUT/system/build.prop`
         ZIPFILE=cm-$MODVERSION.zip
         ZIPPATH=$OUT/$ZIPFILE
         if [ ! -f $ZIPPATH ] ; then
@@ -716,7 +729,7 @@ function mm()
         T=$(gettop)
         local M=$(findmakefile)
         # Remove the path to top as the makefilepath needs to be relative
-        local M=`echo $M|sed 's:'$T'/::'`
+        local M=`echo $M|$SED 's:'$T'/::'`
         if [ ! "$T" ]; then
             echo "Couldn't locate the top of the tree.  Try setting TOP."
         elif [ ! "$M" ]; then
@@ -737,7 +750,7 @@ function mmm()
         local DASH_ARGS=$(echo "$@" | awk -v RS=" " -v ORS=" " '/^-.*$/')
         local DIRS=$(echo "$@" | awk -v RS=" " -v ORS=" " '/^[^-].*$/')
         for DIR in $DIRS ; do
-            DIR=`echo $DIR | sed -e 's:/$::'`
+            DIR=`echo $DIR | $SED -e 's:/$::'`
             if [ -f $DIR/Android.mk ]; then
                 TO_CHOP=`(cd -P -- $T && pwd -P) | wc -c | tr -d ' '`
                 TO_CHOP=`expr $TO_CHOP + 1`
@@ -804,7 +817,7 @@ function pid()
 {
    local EXE="$1"
    if [ "$EXE" ] ; then
-       local PID=`adb shell ps | fgrep $1 | sed -e 's/[^ ]* *\([0-9]*\).*/\1/'`
+       local PID=`adb shell ps | fgrep $1 | $SED -e 's/[^ ]* *\([0-9]*\).*/\1/'`
        echo "$PID"
    else
        echo "usage: pid name"
@@ -1128,7 +1141,7 @@ function godir () {
         echo ""
     fi
     local lines
-    lines=($(grep "$1" $T/filelist | sed -e 's/\/[^/]*$//' | sort | uniq))
+    lines=($(grep "$1" $T/filelist | $SED -e 's/\/[^/]*$//' | sort | uniq))
     if [[ ${#lines[@]} = 0 ]]; then
         echo "Not found"
         return
@@ -1166,10 +1179,10 @@ function cmremote()
     then
         echo .git directory not found. Please run this from the root directory of the Android repository you wish to set up.
     fi
-    GERRIT_REMOTE=$(cat .git/config  | grep git://github.com | awk '{ print $NF }' | sed s#git://github.com/##g)
+    GERRIT_REMOTE=$(cat .git/config  | grep git://github.com | awk '{ print $NF }' | $SED s#git://github.com/##g)
     if [ -z "$GERRIT_REMOTE" ]
     then
-        GERRIT_REMOTE=$(cat .git/config  | grep http://github.com | awk '{ print $NF }' | sed s#http://github.com/##g)
+        GERRIT_REMOTE=$(cat .git/config  | grep http://github.com | awk '{ print $NF }' | $SED s#http://github.com/##g)
         if [ -z "$GERRIT_REMOTE" ]
         then
           echo Unable to set up the git remote, are you in the root of the repo?
@@ -1197,7 +1210,7 @@ function makerecipe() {
   mv local_manifest.xml local_manifest.xml.bak
   cd ..
   cd android
-  sed -i s/'default revision=.*'/'default revision="refs\/heads\/'$1'"'/ default.xml
+  $SED -i s/'default revision=.*'/'default revision="refs\/heads\/'$1'"'/ default.xml
   git commit -a -m "$1"
   cd ..
 
@@ -1472,7 +1485,7 @@ function cmrebase() {
         return
     fi
     cd $dir
-    repo=$(cat .git/config  | grep git://github.com | awk '{ print $NF }' | sed s#git://github.com/##g)
+    repo=$(cat .git/config  | grep git://github.com | awk '{ print $NF }' | $SED s#git://github.com/##g)
     echo "Starting branch..."
     repo start tmprebase .
     echo "Bringing it up to date..."
