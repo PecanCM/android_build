@@ -51,13 +51,13 @@ endef
 
 # TODO: push this into the combo files; unfortunately, we don't even
 # know HOST_OS at this point.
-trysed := $(shell echo a | gsed -E -e 's/a/b/' 2>/dev/null)
+trysed := $(shell echo a | sed -E -e 's/a/b/' 2>/dev/null)
 ifeq ($(trysed),b)
-  SED_EXTENDED := gsed -E
+  SED_EXTENDED := sed -E
 else
-  trysed := $(shell echo c | gsed -r -e 's/c/d/' 2>/dev/null)
+  trysed := $(shell echo c | sed -r -e 's/c/d/' 2>/dev/null)
   ifeq ($(trysed),d)
-    SED_EXTENDED := gsed -r
+    SED_EXTENDED := sed -r
   else
     $(error Unknown sed version)
   endif
@@ -74,7 +74,7 @@ endif
 ###########################################################
 
 define find-copy-subdir-files
-$(shell find $(2) -name "$(1)" | $(SED_EXTENDED) "s:($(2)/?(.*)):\\1\\:$(3)/\\2:" | gsed "s://:/:g")
+$(shell find $(2) -name "$(1)" | $(SED_EXTENDED) "s:($(2)/?(.*)):\\1\\:$(3)/\\2:" | sed "s://:/:g")
 endef
 
 # ---------------------------------------------------------------

@@ -457,7 +457,7 @@ $(4)/hash-timestamp: $(5) $(BUILD_SYSTEM)/Makefile
 	$$(hide) rm -rf $$@ $$(PRIVATE_DIR)/hash
 	$$(hide) mkdir -p $$(PRIVATE_DIR)/hash
 	$$(hide) for file in $$$$(find $$(PRIVATE_DIR)/src -type f); do \
-			hash=$$$$($(MD5SUM) $$$$file | gsed -e "s/ .*//"); \
+			hash=$$$$($(MD5SUM) $$$$file | sed -e "s/ .*//"); \
 			hashfile=$$(PRIVATE_DIR)/hash/$$$$hash; \
 			echo $$$$file >> $$$$hashfile; \
 		done
@@ -467,7 +467,7 @@ $(1): $(4)/hash-timestamp
 	$$(hide) mkdir -p $$(dir $$@)
 	$$(hide) echo $$(PRIVATE_MESSAGE) > $$@
 	$$(hide) find $$(PRIVATE_DIR)/hash -type f | xargs cat | sort | \
-		gsed -e "s:$$(PRIVATE_DIR)/src\(.*\)\.txt:  \1:" >> $$@
+		sed -e "s:$$(PRIVATE_DIR)/src\(.*\)\.txt:  \1:" >> $$@
 	$$(hide) echo >> $$@
 	$$(hide) echo >> $$@
 	$$(hide) echo >> $$@
@@ -476,7 +476,7 @@ $(1): $(4)/hash-timestamp
 				>> $$@; \
 			echo "Notices for file(s):" >> $$@; \
 			cat $$$$hashfile | sort | \
-				gsed -e "s:$$(PRIVATE_DIR)/src\(.*\)\.txt:  \1:" >> \
+				sed -e "s:$$(PRIVATE_DIR)/src\(.*\)\.txt:  \1:" >> \
 				$$@; \
 			echo "------------------------------------------------------------"\
 				>> $$@; \
@@ -502,19 +502,19 @@ $(2): $(4)/hash-timestamp
 		>> $$@
 	$$(hide) for hashfile in $$$$(find $$(PRIVATE_DIR)/hash -type f); do \
 			cat $$$$hashfile | sort | \
-				gsed -e "s:$$(PRIVATE_DIR)/src\(.*\)\.txt:  <a name=\"\1\"></a>:" >> \
+				sed -e "s:$$(PRIVATE_DIR)/src\(.*\)\.txt:  <a name=\"\1\"></a>:" >> \
 				$$@; \
 			echo "<tr><td class=\"same-license\">" >> $$@; \
 			echo "<div class=\"label\">Notices for file(s):</div>" >> $$@; \
 			echo "<div class=\"file-list\">" >> $$@; \
 			cat $$$$hashfile | sort | \
-				gsed -e "s:$$(PRIVATE_DIR)/src\(.*\)\.txt:  \1<br/>:" >> $$@; \
+				sed -e "s:$$(PRIVATE_DIR)/src\(.*\)\.txt:  \1<br/>:" >> $$@; \
 			echo "</div><!-- file-list -->" >> $$@; \
 			echo >> $$@; \
 			orig=$$$$(head -n 1 $$$$hashfile); \
 			echo "<pre class=\"license-text\">" >> $$@; \
-			cat $$$$orig | gsed -e "s/\&/\&amp;/g" | gsed -e "s/</\&lt;/g" \
-					| gsed -e "s/>/\&gt;/g" >> $$@; \
+			cat $$$$orig | sed -e "s/\&/\&amp;/g" | sed -e "s/</\&lt;/g" \
+					| sed -e "s/>/\&gt;/g" >> $$@; \
 			echo "</pre><!-- license-text -->" >> $$@; \
 			echo "</td></tr><!-- same-license -->" >> $$@; \
 			echo >> $$@; \
@@ -770,7 +770,7 @@ $(TARGET_RECOVERY_ROOT_TIMESTAMP): $(INTERNAL_RECOVERY_FILES) \
 	cat $(INSTALLED_DEFAULT_PROP_TARGET) $(recovery_build_prop) \
 	        > $(TARGET_RECOVERY_ROOT_OUT)/default.prop
 	@echo Modifying default.prop
-	gsed -i 's/ro.build.date.utc=.*/ro.build.date.utc=0/g' $(TARGET_RECOVERY_ROOT_OUT)/default.prop
+	sed -i 's/ro.build.date.utc=.*/ro.build.date.utc=0/g' $(TARGET_RECOVERY_ROOT_OUT)/default.prop
 	@echo "----- Made recovery filesystem --------" $(TARGET_RECOVERY_ROOT_OUT)
 	@touch $(TARGET_RECOVERY_ROOT_TIMESTAMP)
 

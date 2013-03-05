@@ -72,17 +72,17 @@ echo 'run_program("/sbin/busybox", "sh", "-c", "busybox rm -f /etc ; busybox mkd
 
 for file in $FILES
 do
-    echo 'delete("'$(echo $file | gsed s!\\./!!g)'");' >> $UPDATER_SCRIPT
-    echo 'package_extract_file("'$(echo $file | gsed s!\\./!!g)'", "'$(echo $file | gsed s!\\./!/!g)'");' >> $UPDATER_SCRIPT
+    echo 'delete("'$(echo $file | sed s!\\./!!g)'");' >> $UPDATER_SCRIPT
+    echo 'package_extract_file("'$(echo $file | sed s!\\./!!g)'", "'$(echo $file | sed s!\\./!/!g)'");' >> $UPDATER_SCRIPT
     if [ -x $file ]
     then
-        echo 'set_perm(0, 0, 0755, "'$(echo $file | gsed s!\\./!/!g)'");' >> $UPDATER_SCRIPT
+        echo 'set_perm(0, 0, 0755, "'$(echo $file | sed s!\\./!/!g)'");' >> $UPDATER_SCRIPT
     fi
 done
     
 for file in $SYMLINKS
 do
-    echo 'symlink("'$(readlink $file)'", "'$(echo $file | gsed s!\\./!/!g)'");' >> $UPDATER_SCRIPT
+    echo 'symlink("'$(readlink $file)'", "'$(echo $file | sed s!\\./!/!g)'");' >> $UPDATER_SCRIPT
 done
 
 echo 'set_perm_recursive(0, 2000, 0755, 0755, "/sbin");' >> $UPDATER_SCRIPT

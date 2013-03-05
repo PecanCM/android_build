@@ -30,7 +30,7 @@ function mcpguard () {
     fi
 }
 
-VERSION=$(cat bootable/recovery/Android.mk | grep RECOVERY_VERSION | grep RECOVERY_NAME | awk '{ print $4 }' | gsed s/v//g)
+VERSION=$(cat bootable/recovery/Android.mk | grep RECOVERY_VERSION | grep RECOVERY_NAME | awk '{ print $4 }' | sed s/v//g)
 RELEASE_VERSION=$VERSION
 if [ ! -z "$BOARD_TOUCH_RECOVERY" ]
 then
@@ -54,7 +54,7 @@ do
         rm -rf $OUT/recovery*
         rm -rf $OUT/root*
     fi
-    DEVICE_NAME=$(echo $TARGET_PRODUCT | gsed s/koush_// | gsed s/zte_// | gsed s/cm_// | gsed s/aosp_// |  gsed s/motorola// | gsed s/huawei_// | gsed s/htc_// | gsed s/_us// | gsed s/cyanogen_// | gsed s/generic_// | gsed s/full_//)
+    DEVICE_NAME=$(echo $TARGET_PRODUCT | sed s/koush_// | sed s/zte_// | sed s/cm_// | sed s/aosp_// |  sed s/motorola// | sed s/huawei_// | sed s/htc_// | sed s/_us// | sed s/cyanogen_// | sed s/generic_// | sed s/full_//)
     PRODUCT_NAME=$(basename $OUT)
     make -j16 recoveryzip
     RESULT=$?

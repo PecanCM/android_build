@@ -38,8 +38,8 @@ endif
 #endif
 
 # check for broken versions of make
-ifeq (0,$(shell expr $$(echo $(MAKE_VERSION) | gsed "s/[^0-9\.].*//") = 3.81))
-ifeq (0,$(shell expr $$(echo $(MAKE_VERSION) | gsed "s/[^0-9\.].*//") = 3.82))
+ifeq (0,$(shell expr $$(echo $(MAKE_VERSION) | sed "s/[^0-9\.].*//") = 3.81))
+ifeq (0,$(shell expr $$(echo $(MAKE_VERSION) | sed "s/[^0-9\.].*//") = 3.82))
 $(warning ********************************************************************************)
 $(warning *  You are using version $(MAKE_VERSION) of make.)
 $(warning *  Android can only be built by versions 3.81 and 3.82.)
