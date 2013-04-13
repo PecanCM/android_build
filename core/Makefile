@@ -1327,15 +1327,12 @@ $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(DISTTOOLS)
 	   --override_device=$(override_device) \
 	   $(BUILT_TARGET_FILES_PACKAGE) $@
 
-<<<<<<< HEAD
-=======
 MODVERSION := $(shell sed -n -e'/ro\.cm\.version/s/^.*=//p' $(INSTALLED_BUILD_PROP_TARGET))
 ifeq ($(MODVERSION),)
 	MODVERSION := $(CM_VERSION)
 endif
 CM_TARGET_PACKAGE := $(PRODUCT_OUT)/cm-$(MODVERSION).zip
 
->>>>>>> f751d253e0f996fc83cac8bdef8d7a469be63283
 .PHONY: otapackage bacon
 otapackage: $(INTERNAL_OTA_PACKAGE_TARGET)
 bacon: otapackage
