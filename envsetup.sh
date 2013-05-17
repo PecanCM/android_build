@@ -27,8 +27,8 @@ Invoke ". build/envsetup.sh" from your shell to add the following functions to y
 - jgrep:   Greps on all local Java files.
 - resgrep: Greps on all local res/*.xml files.
 - godir:   Go to the directory containing a file.
-- cmremote: Add git remote for CM Gerrit Review.
-- cmgerrit: A Git wrapper that fetches/pushes patch from/to CM Gerrit Review.
+- pcmremote: Add git remote for PecanCM Gerrit Review.
+- pcmgerrit: A Git wrapper that fetches/pushes patch from/to PecanCM Gerrit Review.
 - cmrebase: Rebase a Gerrit change and push it again.
 - aospremote: Add git remote for matching AOSP repository.
 - mka:      Builds using SCHED_BATCH on all processors.
@@ -1310,9 +1310,9 @@ function godir () {
     cd $T/$pathname
 }
 
-function cmremote()
+function pcmremote()
 {
-    git remote rm cmremote 2> /dev/null
+    git remote rm pcmremote 2> /dev/null
     if [ ! -d .git ]
     then
         echo .git directory not found. Please run this from the root directory of the Android repository you wish to set up.
@@ -1327,16 +1327,16 @@ function cmremote()
           return 0
         fi
     fi
-    CMUSER=`git config --get review.review.pecancm.insomnia247.nl.username`
+    CMUSER=`git config --get review.review.pecancm.org.username`
     if [ -z "$CMUSER" ]
     then
-        git remote add cmremote ssh://review.pecancm.insomnia247.nl:6117/$GERRIT_REMOTE
+        git remote add pcmremote ssh://review.pecancm.org:6117/$GERRIT_REMOTE
     else
-        git remote add cmremote ssh://$CMUSER@review.pecancm.insomnia247.nl:6117/$GERRIT_REMOTE
+        git remote add pcmremote ssh://$CMUSER@review.pecancm.org:6117/$GERRIT_REMOTE
     fi
-    echo You can now push to "cmremote".
+    echo You can now push to "pcmremote".
 }
-export -f cmremote
+export -f pcmremote
 
 function aospremote()
 {
@@ -1451,8 +1451,8 @@ function makerecipe() {
   if [ "$REPO_REMOTE" == "github" ]
   then
     pwd
-    cmremote
-    git push cmremote HEAD:refs/heads/'$1'
+    pcmremote
+    git push pcmremote HEAD:refs/heads/'$1'
   fi
   '
 
@@ -1461,12 +1461,12 @@ function makerecipe() {
   cd ..
 }
 
-function cmgerrit() {
+function pcmgerrit() {
     if [ $# -eq 0 ]; then
         $FUNCNAME help
         return 1
     fi
-    local user=`git config --get review.pecancm.insomnia247.nl.username`
+    local user=`git config --get review.pecancm.org.username`
     local review=`git config --get remote.github.review`
     local project=`git config --get remote.github.projectname`
     local command=$1
@@ -1502,7 +1502,7 @@ EOF
             case $1 in
                 __cmg_*) echo "For internal use only." ;;
                 changes|for)
-                    if [ "$FUNCNAME" = "cmgerrit" ]; then
+                    if [ "$FUNCNAME" = "pcmgerrit" ]; then
                         echo "'$FUNCNAME $1' is deprecated."
                     fi
                     ;;
@@ -1595,7 +1595,7 @@ EOF
                 $local_branch:refs/for/$remote_branch || return 1
             ;;
         changes|for)
-            if [ "$FUNCNAME" = "cmgerrit" ]; then
+            if [ "$FUNCNAME" = "pcmgerrit" ]; then
                 echo >&2 "'$FUNCNAME $command' is deprecated."
             fi
             ;;
@@ -1723,7 +1723,7 @@ function cmrebase() {
     echo "Bringing it up to date..."
     repo sync .
     echo "Fetching change..."
-    git fetch "http://review.pecancm.insomnia247.nl/p/$repo" "refs/changes/$refs" && git cherry-pick FETCH_HEAD
+    git fetch "http://review.pecancm.org/p/$repo" "refs/changes/$refs" && git cherry-pick FETCH_HEAD
     if [ "$?" != "0" ]; then
         echo "Error cherry-picking. Not uploading!"
         return
