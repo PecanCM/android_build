@@ -1327,12 +1327,12 @@ function pcmremote()
           return 0
         fi
     fi
-    CMUSER=`git config --get review.review.pecancm.org.username`
-    if [ -z "$CMUSER" ]
+    PCMUSER=`git config --get review.review.pecancm.org.username`
+    if [ -z "$PCMUSER" ]
     then
         git remote add pcmremote ssh://review.pecancm.org:6117/$GERRIT_REMOTE
     else
-        git remote add pcmremote ssh://$CMUSER@review.pecancm.org:6117/$GERRIT_REMOTE
+        git remote add pcmremote ssh://$PCMUSER@review.pecancm.org:6117/$GERRIT_REMOTE
     fi
     echo You can now push to "pcmremote".
 }
