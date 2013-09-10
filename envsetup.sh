@@ -1,5 +1,5 @@
 # this must come first as even this file uses the sed command
-if [ `uname -s` =~ Darwin ]; then 
+if [ `uname -s` = Darwin ]; then 
 export SYSTEM_USE_OSX=y
 fi
 
